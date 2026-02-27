@@ -141,30 +141,12 @@ contract PricePredictionGame is ReentrancyGuard, Pausable, Ownable {
         endPrice = _endPrice;
         gameResolved = true;
         
-        // Determine if price went above or below target
         bool priceAboveTarget = _endPrice > targetPrice;
         
-        // Determine winner based on mode and player predictions
-        if (mode == 1) {
-            // Mode 1: Above wins
-            if (priceAboveTarget) {
-                // Price went above target, player who chose "above" (true) wins
-                winner = player1Option ? player1 : player2;
-            } else {
-                // Price went below target, player who chose "below" (false) wins
-                winner = player1Option ? player2 : player1;
-            }
-        } else {
-            // Mode 0: Below wins
-            if (!priceAboveTarget) {
-                // Price went below target, player who chose "below" (false) wins
-                winner = player1Option ? player2 : player1;
-            } else {
-                // Price went above target, player who chose "above" (true) wins
-                winner = player1Option ? player1 : player2;
-            }
-        }
+        winner = (priceAboveTarget == player1Option) ? player1 : player2;
 
+        (bool success,) = payable(winner).call{value: totalPrize}("");
+        require(success, "Prize transfer failed");
         
         emit GameResolved(winner, _endPrice, totalPrize);
     }
@@ -172,7 +154,7 @@ contract PricePredictionGame is ReentrancyGuard, Pausable, Ownable {
     /**
      * @dev Emergency function to cancel game and refund players (only before resolution)
      */
-    function cancelGame() external onlyOwner gameEnded notResolved {
+    function cancelGame() external onlyOwner notResolved {
         require(player1 != address(0) || player2 != address(0), "No players to refund");
         
         uint256 refundAmount = stakeAmount;
