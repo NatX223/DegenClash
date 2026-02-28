@@ -1,0 +1,112 @@
+@import "tailwindcss";
+
+:root {
+  --primary: #91ee91;
+  --primary-hover: #1ee01e;
+  --primary-dark: #163316;
+  --background-light: #f6f8f6;
+  --background-dark: #0d140d;
+  --surface-dark: #162616;
+  --surface-darker: #0d130d;
+  --surface-glass: rgba(22, 38, 22, 0.6);
+  --border-dark: #224922;
+}
+
+@theme inline {
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-dark: var(--primary-dark);
+  --color-background-light: var(--background-light);
+  --color-background-dark: var(--background-dark);
+  --color-surface-dark: var(--surface-dark);
+  --color-surface-darker: var(--surface-darker);
+  --color-surface-glass: var(--surface-glass);
+  --color-border-dark: var(--border-dark);
+  --font-sans: var(--font-space-grotesk);
+}
+
+body {
+  font-family: var(--font-space-grotesk), sans-serif;
+}
+
+.glass-effect {
+  background: rgba(19, 28, 19, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(37, 244, 37, 0.1);
+}
+
+.neon-glow {
+  box-shadow: 0 0 15px rgba(37, 244, 37, 0.3);
+}
+
+.text-glow {
+  text-shadow: 0 0 10px rgba(37, 244, 37, 0.5);
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* Custom scrollbar for webkit */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0d140d;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2a402a;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3e5e3e;
+}
+
+.glass-panel {
+  background: rgba(22, 38, 22, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(145, 238, 145, 0.1);
+}.g
+lass-card {
+  background: rgba(26, 46, 26, 0.4);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(145, 238, 145, 0.1);
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  border-color: rgba(145, 238, 145, 0.4);
+  box-shadow: 0 0 20px rgba(145, 238, 145, 0.1);
+}
+
+.glow-border-primary {
+  box-shadow: 0 0 10px rgba(145, 238, 145, 0.2);
+}.
+glass {
+  background: rgba(22, 42, 22, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(37, 244, 37, 0.1);
+}
+
+.neon-glow-green {
+  text-shadow: 0 0 10px rgba(37, 244, 37, 0.5);
+}
+
+.neon-glow-red {
+  text-shadow: 0 0 10px rgba(255, 77, 77, 0.5);
+}
