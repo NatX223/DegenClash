@@ -107,7 +107,7 @@ contract PricePredictionGame is ReentrancyGuard, Pausable, Ownable {
         whenNotPaused 
         gameNotStarted 
     {
-        require(msg.value == stakeAmount, "Amount must be the stake amount");
+        require(msg.value >= stakeAmount, "Amount must be the stake amount");
         require(player1 == address(0) || player2 == address(0), "Game is full");
         require(msg.sender != player1 && msg.sender != player2, "Player already joined");
         
@@ -121,6 +121,22 @@ contract PricePredictionGame is ReentrancyGuard, Pausable, Ownable {
             player2Option = option;
             emit PlayerJoined(msg.sender, option);
         }
+        
+        totalPrize = totalPrize + msg.value;
+    }
+    /** 
+     * @dev Allows a player to increase his position in the game
+    */
+    function stake() 
+        external 
+        payable 
+        nonReentrant 
+        whenNotPaused 
+        gameNotStarted 
+    {
+        require(msg.value >= stakeAmount, "Amount must be the stake amount");
+        require(msg.sender == player1 || msg.sender == player1, "Game is full");
+        require(msg.sender != player1 && msg.sender != player2, "Player already joined");
         
         totalPrize = totalPrize + msg.value;
     }
@@ -185,14 +201,6 @@ contract PricePredictionGame is ReentrancyGuard, Pausable, Ownable {
      */
     function unpause() external onlyOwner {
         _unpause();
-    }
-    
-    /**
-     * @dev Update resolver address (only owner)
-     */
-    function updateResolver(address _newResolver) external onlyOwner {
-        require(_newResolver != address(0), "New resolver cannot be zero address");
-        resolver = _newResolver;
     }
     
     // View functions
