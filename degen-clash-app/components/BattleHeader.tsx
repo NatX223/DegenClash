@@ -1,5 +1,7 @@
 'use client';
 
+import { ConnectWalletButton } from './ConnectWalletButton';
+
 interface BattleHeaderProps {
   asset: {
     pair: string;
@@ -49,9 +51,7 @@ export default function BattleHeader({ asset, timeRemaining, onlineUsers }: Batt
             {onlineUsers} Online
           </div>
         </div>
-        <button className="bg-primary text-background-dark px-4 py-2 rounded-lg font-bold text-sm hover:scale-105 transition-transform">
-          Connect Wallet
-        </button>
+        <ConnectWalletButton variant="battle" />
       </div>
     </header>
   );

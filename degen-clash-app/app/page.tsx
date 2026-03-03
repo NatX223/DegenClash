@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { ConnectWalletButton } from '../components/ConnectWalletButton';
 
 export default function Home() {
   return (
@@ -21,6 +22,11 @@ export default function Home() {
           <p className="text-slate-400 max-w-md mx-auto">
             Explore our landing page or dive straight into the dashboard
           </p>
+        </div>
+        
+        {/* Wallet Connection */}
+        <div className="mb-8">
+          <ConnectWalletButton />
         </div>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center">

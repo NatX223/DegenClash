@@ -30,6 +30,7 @@ contract PricePredictionGame is ReentrancyGuard, Pausable, Ownable {
     uint256 public stakeAmount;
     uint256 public totalPrize;
     bool public gameResolved;
+    bool public activeGame;
     address public winner;
     
     // Events
@@ -50,7 +51,7 @@ contract PricePredictionGame is ReentrancyGuard, Pausable, Ownable {
     }
     
     modifier gameActive() {
-        require(block.timestamp >= startTime && block.timestamp <= endTime, "Game is not active");
+        require(activeGame, "Game is not active");
         _;
     }
     
@@ -119,6 +120,7 @@ contract PricePredictionGame is ReentrancyGuard, Pausable, Ownable {
             require(option != player1Option, "You Cannot select the same option as your oponent");
             player2 = msg.sender;
             player2Option = option;
+            activeGame = true;
             emit PlayerJoined(msg.sender, option);
         }
         
@@ -132,7 +134,7 @@ contract PricePredictionGame is ReentrancyGuard, Pausable, Ownable {
         payable 
         nonReentrant 
         whenNotPaused 
-        gameNotStarted 
+        gameActive 
     {
         require(msg.value >= stakeAmount, "Amount must be the stake amount");
         require(msg.sender == player1 || msg.sender == player1, "Game is full");
@@ -155,6 +157,7 @@ contract PricePredictionGame is ReentrancyGuard, Pausable, Ownable {
         require(player1 != address(0) && player2 != address(0), "Both players must have joined");
         
         endPrice = _endPrice;
+        activeGame = false;
         gameResolved = true;
         
         bool priceAboveTarget = _endPrice > targetPrice;
@@ -170,21 +173,14 @@ contract PricePredictionGame is ReentrancyGuard, Pausable, Ownable {
     /**
      * @dev Emergency function to cancel game and refund players (only before resolution)
      */
-    function cancelGame() external onlyOwner notResolved {
-        require(player1 != address(0) || player2 != address(0), "No players to refund");
+    function cancelGame() external notResolved {
+        require(msg.sender == player1 && player2 == address(0), "Game already On");
         
         uint256 refundAmount = stakeAmount;
         
-        if (player1 != address(0)) {
-            (bool success1, ) = payable(player1).call{value: refundAmount}("");
-            require(success1, "Refund to player1 failed");
-        }
-        
-        if (player2 != address(0)) {
-            (bool success2, ) = payable(player2).call{value: refundAmount}("");
-            require(success2, "Refund to player2 failed");
-        }
-        
+        (bool success1, ) = payable(player1).call{value: refundAmount}("");
+        require(success1, "Refund to player1 failed");
+
         totalPrize = 0;
         gameResolved = true;
     }
@@ -226,15 +222,15 @@ contract PricePredictionGame is ReentrancyGuard, Pausable, Ownable {
         return (player1, player2, player1Option, player2Option, winner);
     }
     
-    function getGameStatus() external view returns (string memory) {
-        if (block.timestamp < startTime) {
-            return "Not Started";
-        } else if (block.timestamp <= endTime) {
-            return "Active";
-        } else if (!gameResolved) {
-            return "Ended - Awaiting Resolution";
-        } else {
-            return "Resolved";
+    function getGameStatus() external view returns (uint8) {
+        if (!activeGame && block.timestamp < endTime) {
+            return 0;
+        } else if (activeGame && block.timestamp < endTime) {
+            return 1;
+        } else if (activeGame && block.timestamp >= endTime) {
+            return 2;
+        } else if (gameResolved) {
+            return 3;
         }
     }
 }

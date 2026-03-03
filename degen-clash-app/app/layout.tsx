@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
+import '@rainbow-me/rainbowkit/styles.css';
+import { WalletProvider } from "../components/providers/WalletProvider";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -30,7 +32,9 @@ export default function RootLayout({
       <body
         className={`${spaceGrotesk.variable} bg-slate-50 dark:bg-zinc-950 text-slate-900 dark:text-slate-100 font-sans selection:bg-green-400 selection:text-black antialiased`}
       >
-        {children}
+        <WalletProvider>
+          {children}
+        </WalletProvider>
       </body>
     </html>
   );

@@ -1,5 +1,7 @@
 'use client';
 
+import { ConnectWalletButton } from './ConnectWalletButton';
+
 interface LobbyHeaderProps {
   onSearchChange?: (value: string) => void;
 }
@@ -52,9 +54,7 @@ export default function LobbyHeader({ onSearchChange }: LobbyHeaderProps) {
           />
         </div>
         
-        <button className="bg-primary text-background-dark font-bold py-2 px-6 rounded-lg text-sm transition-transform hover:scale-105 active:scale-95">
-          Connect Wallet
-        </button>
+        <ConnectWalletButton variant="header" />
         
         <div className="h-10 w-10 rounded-full border border-primary/30 overflow-hidden">
           <div className="h-full w-full bg-slate-700 rounded-full"></div>
