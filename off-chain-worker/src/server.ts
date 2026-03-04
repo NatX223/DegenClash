@@ -41,8 +41,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const SOURCE_RPC_URL = process.env.SOURCE_CHAIN_RPC_URL;
-const provider = new ethers.JsonRpcProvider(SOURCE_RPC_URL);
+const SOURCE_RPC_URL = process.env.SOURCE_CHAIN_RPC_URL!;
+const provider = new ethers.WebSocketProvider(SOURCE_RPC_URL);
 const AGGREGATOR_ADDRESS = process.env.BTC_USD_AGGREGATOR_ADDRESS!;
 
 const aggregatorContract = new ethers.Contract(AGGREGATOR_ADDRESS, aggregatorAbi, provider);
