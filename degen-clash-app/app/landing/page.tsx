@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { ConnectWalletButton } from "../../components/ConnectWalletButton";
 
 export default function Landing() {
@@ -102,9 +103,12 @@ export default function Landing() {
                 >
                   <path d="M6.92 5H5l6.5 6.5L5 18h1.92l5.58-5.58L18 18h1.92L13.42 11.5 19.84 5H18l-5.58 5.58L6.92 5z" />
                 </svg>
-                <span>Start 1v1</span>
+                <span>Start Game</span>
               </button>
-              <button className="flex min-w-[160px] items-center justify-center gap-2 rounded-lg border-2 border-primary bg-transparent px-8 py-3.5 text-base font-bold text-primary transition-all hover:bg-primary/10 hover:scale-105">
+              <Link
+                href="/lobby"
+                className="flex min-w-[160px] items-center justify-center gap-2 rounded-lg border-2 border-primary bg-transparent px-8 py-3.5 text-base font-bold text-primary transition-all hover:bg-primary/10 hover:scale-105"
+              >
                 <svg
                   className="w-5 h-5"
                   fill="currentColor"
@@ -112,8 +116,8 @@ export default function Landing() {
                 >
                   <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A1.5 1.5 0 0 0 18.54 8H16c-.8 0-1.54.37-2.01 1.01l-2.54 7.63H14v6h6zM12.5 11.5c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5S11 9.17 11 10s.67 1.5 1.5 1.5zM5.5 6c1.11 0 2-.89 2-2s-.89-2-2-2-2 .89-2 2 .89 2 2 2zm2 16v-6H10l-2.54-7.63A1.5 1.5 0 0 0 6.04 8H3.5c-.8 0-1.54.37-2.01 1.01L-.05 16.63H2.5v6h5z" />
                 </svg>
-                <span>Join Team Battle</span>
-              </button>
+                <span>Join Lobby</span>
+              </Link>
             </div>
 
             {/* Stats Row */}

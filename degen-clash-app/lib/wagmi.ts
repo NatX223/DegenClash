@@ -10,7 +10,7 @@ import {
 import { defineChain } from 'viem';
 
 // Define Creditcoin Testnet as a custom chain
-export const creditcoinTestnet = defineChain({
+const creditcoinTestnet = defineChain({
   id: 102036,
   name: 'Creditcoin Testnet',
   nativeCurrency: {

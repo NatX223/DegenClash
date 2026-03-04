@@ -7,7 +7,7 @@ module.exports = {
   networks: {
     creditCoin: {
       url: process.env.CREDITCOIN_RPC_URL,
-      accounts: [process.env.SIGNER]
+      accounts: [process.env.SIGNER, process.env.SECOND_PLAYER]
     },
   }
 };

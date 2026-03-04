@@ -13,6 +13,7 @@ import "./USC/MarketUSC.sol";
  */
 contract GameFactory is Ownable, ReentrancyGuard, Pausable {    
     uint256 public gameCounter;
+    mapping (uint256 => address) public gameAddresses;
     
     // Events
     event GameCreated(
@@ -20,7 +21,6 @@ contract GameFactory is Ownable, ReentrancyGuard, Pausable {
         address indexed gameAddress,
         address indexed creator,
         uint8 mode,
-        uint256 startTime,
         uint256 endTime,
         uint256 targetPrice,
         uint256 stakeAmount
@@ -36,7 +36,6 @@ contract GameFactory is Ownable, ReentrancyGuard, Pausable {
     /**
      * @dev Creates a new PricePredictionGame contract
      * @param _mode The mode of the game - above(1) or below(0)
-     * @param _startTime When the game request expires if no one joins
      * @param _endTime When the game ends (timestamp)
      * @param _targetPrice Target price for the prediction
      * @param _stakeAmount The stake amount required to join the game
@@ -45,14 +44,12 @@ contract GameFactory is Ownable, ReentrancyGuard, Pausable {
      */
     function createGame(
         uint8 _mode,
-        uint256 _startTime,
         uint256 _endTime,
         uint256 _targetPrice,
         uint256 _stakeAmount
     ) external payable nonReentrant whenNotPaused returns (uint256 gameId, address gameAddress) {
         require(_mode <= 1, "Invalid mode: must be 0 or 1");
-        require(_startTime > block.timestamp, "Start time must be in future");
-        require(_endTime > _startTime, "End time must be after start time");
+        require(_endTime > block.timestamp, "End time must be in the future");
         require(_targetPrice > 0, "Target price must be greater than 0");
         require(_stakeAmount > 0, "Stake amount must be greater than 0");
         
@@ -63,7 +60,6 @@ contract GameFactory is Ownable, ReentrancyGuard, Pausable {
         // Deploy new game contract
         PricePredictionGame newGame = new PricePredictionGame(
             _mode,
-            _startTime,
             _endTime,
             _targetPrice,
             marketUSCAddress,
@@ -72,6 +68,7 @@ contract GameFactory is Ownable, ReentrancyGuard, Pausable {
         
         gameId = gameCounter++;
         gameAddress = address(newGame);
+        gameAddresses[gameId] = gameAddress;
 
         newMarketUSC.setMarket(gameAddress);
         
@@ -80,7 +77,6 @@ contract GameFactory is Ownable, ReentrancyGuard, Pausable {
             gameAddress,
             msg.sender,
             _mode,
-            _startTime,
             _endTime,
             _targetPrice,
             _stakeAmount

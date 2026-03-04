@@ -34,7 +34,7 @@ contract PricePredictionGame is ReentrancyGuard, Pausable, Ownable {
     address public winner;
     
     // Events
-    event GameCreated(uint8 mode, uint256 startTime, uint256 endTime, uint256 targetPrice, uint256 stakeAmount);
+    event GameCreated(uint8 mode, uint256 endTime, uint256 targetPrice, uint256 stakeAmount);
     event PlayerJoined(address indexed player, bool predictedPrice);
     event GameResolved(address indexed winner, uint256 endPrice, uint256 prize);
     event PrizeWithdrawn(address indexed winner, uint256 amount);
@@ -42,11 +42,6 @@ contract PricePredictionGame is ReentrancyGuard, Pausable, Ownable {
     // Modifiers
     modifier onlyResolver() {
         require(msg.sender == resolver, "Only resolver can call this function");
-        _;
-    }
-    
-    modifier gameNotStarted() {
-        require(block.timestamp < startTime, "Game has already started");
         _;
     }
     
@@ -68,7 +63,6 @@ contract PricePredictionGame is ReentrancyGuard, Pausable, Ownable {
     /**
      * @dev Constructor to initialize the game
      * @param _mode The mode of the game - above(1) or below(0)
-     * @param _startTime When the game request expires if no one joins and when it officially starts when another player jpins 
      * @param _endTime When the game ends (timestamp)
      * @param _targetPrice Initial price of the asset
      * @param _resolver Resolver address authorized to resolve the game
@@ -76,25 +70,22 @@ contract PricePredictionGame is ReentrancyGuard, Pausable, Ownable {
      */
     constructor(
         uint8 _mode,
-        uint256 _startTime,
         uint256 _endTime,
         uint256 _targetPrice,
         address _resolver,
         uint256 _stakeAmount
     ) Ownable(msg.sender) {
-        require(_startTime > block.timestamp, "Start time must be in the future");
         require(_targetPrice > 0, "Target price must be greater than 0");
         require(_resolver != address(0), "Resolver cannot be zero address");
         require(_stakeAmount > 0, "Stake amount fee must be greater than 0");
         
         mode = _mode;
-        startTime = _startTime;
         endTime = _endTime;
         targetPrice = _targetPrice;
         resolver = _resolver;  
         stakeAmount = _stakeAmount;
         
-        emit GameCreated(_mode, _startTime, _endTime, _targetPrice, _stakeAmount);
+        emit GameCreated(_mode, _endTime, _targetPrice, _stakeAmount);
     }    
    
     /** 
@@ -105,10 +96,9 @@ contract PricePredictionGame is ReentrancyGuard, Pausable, Ownable {
         external 
         payable 
         nonReentrant 
-        whenNotPaused 
-        gameNotStarted 
+        whenNotPaused
     {
-        require(msg.value >= stakeAmount, "Amount must be the stake amount");
+        require(msg.value >= stakeAmount, "Amount must be greater the stake amount");
         require(player1 == address(0) || player2 == address(0), "Game is full");
         require(msg.sender != player1 && msg.sender != player2, "Player already joined");
         

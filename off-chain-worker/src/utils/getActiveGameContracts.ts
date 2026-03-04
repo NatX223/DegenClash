@@ -5,7 +5,6 @@ import marketGameABI from '../abi/marketGame.json';
 interface BTCMarketDocument {
   id: string;
   address: string;
-  [key: string]: any;
 }
 
 /**
