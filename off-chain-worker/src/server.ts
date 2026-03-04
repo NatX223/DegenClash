@@ -5,8 +5,8 @@ import { ethers } from 'ethers';
 import aggregatorAbi from './abi/Aggregator.json';
 import admin from 'firebase-admin';
 import { getFirestore } from 'firebase-admin/firestore';
-import { getActiveGameContracts } from './utils/getActiveGameContracts';
-import { handleMarkets } from './services/handler';
+import { getActiveGameContracts } from './utils/getActiveGameContracts.js';
+import { handleMarkets } from './services/handler.js';
 
 dotenv.config();
 
